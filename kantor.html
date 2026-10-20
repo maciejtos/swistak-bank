@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Świstak Bank - kantor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Świstak Bank</h1>
+    </header>
+
+    <nav>
+        <a href="panel.html">Panel</a>
+        <a href="przelew.html">Nowy przelew</a>
+        <a href="historia.html">Historia</a>
+        <a href="kantor.html">Kantor</a>
+        <a href="logowanie.html">Wyloguj się</a>
+    </nav>
+
+    <main>
+        <h2>Kantor walut</h2>
+        <p>Kursy zmieniają się co 5 sekund (kurs za 1 jednostkę waluty).</p>
+
+        <table>
+            <tr>
+                <th>Waluta</th>
+                <th>Kupno (zł)</th>
+                <th>Sprzedaż (zł)</th>
+            </tr>
+            <tr>
+                <td>PLN</td>
+                <td>1,0000</td>
+                <td>1,0000</td>
+            </tr>
+            <tr>
+                <td>EUR</td>
+                <td id="eur-kupno"></td>
+                <td id="eur-sprzedaz"></td>
+            </tr>
+            <tr>
+                <td>USD</td>
+                <td id="usd-kupno"></td>
+                <td id="usd-sprzedaz"></td>
+            </tr>
+        </table>
+
+        <form id="formularz">
+            <label for="z-waluty">Z waluty</label>
+            <select id="z-waluty">
+                <option>PLN</option>
+                <option>EUR</option>
+                <option>USD</option>
+            </select>
+
+            <label for="na-walute">Na walutę</label>
+            <select id="na-walute">
+                <option>EUR</option>
+                <option>PLN</option>
+                <option>USD</option>
+            </select>
+
+            <label for="kwota">Kwota</label>
+            <input type="number" id="kwota" step="0.01" min="0">
+
+            <button type="submit">Wymień</button>
+        </form>
+        <p id="wynik"></p>
+    </main>
+
+    <script>
+        // kursy: ile zl kosztuje 1 jednostka waluty
+        var kupno = { PLN: 1, EUR: 0, USD: 0 };
+        var sprzedaz = { PLN: 1, EUR: 0, USD: 0 };
+
+        function losuj(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        function losujKursy() {
+            kupno.EUR = losuj(4.0, 4.6);
+            kupno.USD = losuj(3.6, 4.2);
+            sprzedaz.EUR = kupno.EUR + 0.10;
+            sprzedaz.USD = kupno.USD + 0.10;
+
+            document.getElementById("eur-kupno").innerText = kupno.EUR.toFixed(4);
+            document.getElementById("eur-sprzedaz").innerText = sprzedaz.EUR.toFixed(4);
+            document.getElementById("usd-kupno").innerText = kupno.USD.toFixed(4);
+            document.getElementById("usd-sprzedaz").innerText = sprzedaz.USD.toFixed(4);
+        }
+
+        document.getElementById("formularz").addEventListener("submit", function (e) {
+            e.preventDefault();
+            var z = document.getElementById("z-waluty").value;
+            var na = document.getElementById("na-walute").value;
+            var kwota = parseFloat(document.getElementById("kwota").value);
+
+            if (isNaN(kwota) || kwota <= 0) {
+                document.getElementById("wynik").innerText = "Podaj poprawną kwotę.";
+                return;
+            }
+            if (z == na) {
+                document.getElementById("wynik").innerText = "Wybierz dwie różne waluty.";
+                return;
+            }
+
+            // klient sprzedaje walute z (bank kupuje) i kupuje walute na (bank sprzedaje)
+            var wPln = kwota * kupno[z];
+            var wynik = wPln / sprzedaz[na];
+            document.getElementById("wynik").innerText = kwota.toFixed(2) + " " + z + " = " + wynik.toFixed(2) + " " + na;
+        });
+
+        losujKursy();
+        setInterval(losujKursy, 5000);
+    </script>
+</body>
+
+</html>
