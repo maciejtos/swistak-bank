@@ -12,16 +12,29 @@
 
     <main>
         <h2>Logowanie</h2>
-        <form action="panel.html" method="post">
+        <form id="form-logowanie">
             <label for="login">Login</label>
             <input type="text" id="login" name="login">
 
             <label for="haslo">Hasło</label>
             <input type="password" id="haslo" name="haslo">
 
+            <p id="blad" style="color:#c0392b"></p>
             <button type="submit">Zaloguj się</button>
         </form>
         <p>Nie masz konta? <a href="rejestracja.html">Załóż konto</a></p>
     </main>
+    <script src="auth.js"></script>
+    <script>
+        Auth.wyloguj();
+        document.getElementById("form-logowanie").addEventListener("submit", function (e) {
+            e.preventDefault();
+            if (Auth.zaloguj(document.getElementById("login").value, document.getElementById("haslo").value)) {
+                window.location.href = "panel.html";
+            } else {
+                document.getElementById("blad").textContent = "Nieprawidłowy login lub hasło.";
+            }
+        });
+    </script>
 </body>
 </html>

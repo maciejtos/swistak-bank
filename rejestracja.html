@@ -14,7 +14,7 @@
 
     <main>
         <h2>Rejestracja</h2>
-        <form action="logowanie.html" method="post">
+        <form id="form-rejestracja">
             <label for="imie">Imię</label>
             <input type="text" id="imie" name="imie">
 
@@ -27,10 +27,29 @@
             <label for="haslo2">Powtórz hasło</label>
             <input type="password" id="haslo2" name="haslo2">
 
+            <p id="komunikat"></p>
             <button type="submit">Załóż konto</button>
         </form>
         <p>Masz już konto? <a href="logowanie.html">Zaloguj się</a></p>
     </main>
+    <script src="auth.js"></script>
+    <script>
+        document.getElementById("form-rejestracja").addEventListener("submit", function (e) {
+            e.preventDefault();
+            var k = document.getElementById("komunikat");
+            var imie = document.getElementById("imie").value;
+            var nazwisko = document.getElementById("nazwisko").value;
+            var haslo = document.getElementById("haslo").value;
+            k.style.color = "#c0392b";
+            if (!imie.trim() || !nazwisko.trim() || !haslo) { k.textContent = "Wypełnij wszystkie pola."; return; }
+            if (haslo !== document.getElementById("haslo2").value) { k.textContent = "Hasła nie są takie same."; return; }
+            var login = Auth.zarejestruj(imie, nazwisko, haslo);
+            if (!login) { k.textContent = "Takie konto już istnieje."; return; }
+            k.style.color = "#27ae60";
+            k.textContent = "Konto utworzone! Twój login: " + login;
+            this.reset();
+        });
+    </script>
 </body>
 
 </html>

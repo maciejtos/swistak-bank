@@ -26,6 +26,16 @@
         <p>Saldo rachunku:</p>
         <p class="saldo"><span id="saldo"></span></p>
     </main>
+    <script src="auth.js"></script>
+    <script>
+        Auth.wymagajLogowania();
+        var k = Auth.biezacy();
+        if (k) {
+            document.getElementById("imie").textContent = (k.imie + " " + k.nazwisko).trim();
+            document.getElementById("numer-rachunku").textContent = k.rachunek;
+            document.getElementById("saldo").textContent = k.saldo.toLocaleString("pl-PL", { minimumFractionDigits: 2 }) + " zł";
+        }
+    </script>
 </body>
 
 </html>
